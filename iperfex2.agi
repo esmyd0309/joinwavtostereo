@@ -1,0 +1,47 @@
+#!/usr/bin/php -q
+<?php
+
+require_once "phpagi.php";
+
+$AGI = new AGI();
+
+// Verificar que se hayan proporcionado los argumentos esperados
+if (count($argv) !== 4) {
+    echo "Se requieren tres argumentos: audio1, audio2 y name\n";
+    echo "Ejemplo de uso: php script.php audio1.wav audio2.wav out.wav\n";
+    exit(1);
+}
+
+// Obtener los argumentos
+$audio1Path = $argv[1];
+$audio2Path = $argv[2];
+$name = $argv[3];
+
+// Verificar si los archivos existen
+if (!file_exists($audio1Path) || !file_exists($audio2Path)) {
+    echo "Uno o ambos archivos no existen.\n";
+    exit(1);
+}
+
+// Verificar las extensiones de los archivos
+$audio1Extension = pathinfo($audio1Path, PATHINFO_EXTENSION);
+$audio2Extension = pathinfo($audio2Path, PATHINFO_EXTENSION);
+
+if ($audio1Extension !== 'wav' || $audio2Extension !== 'wav') {
+    echo "Ambos archivos deben ser de formato WAV.\n";
+    exit(1);
+}
+
+// Comando para unir los archivos con sox
+$command = "sox -M -c 1 $audio1Path -c 1 $audio2Path -b 32 $name";
+
+// Ejecutar el comando con system()
+system($command, $output);
+
+// Verificar si ocurrió algún error
+if ($output === false) {
+    $AGI->verbose('Error al ejecutar el comando sox.');
+} else {
+    $AGI->verbose('Archivos unidos correctamente.');
+}
+?>
