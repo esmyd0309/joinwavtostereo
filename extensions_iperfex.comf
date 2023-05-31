@@ -1,4 +1,3 @@
-cat /etc/asterisk/extensions_iperfex.comf
 [sub-record-check]
 include => sub-record-check-custom
 exten => s,1,NoOp(---- IPERFEX ----)
