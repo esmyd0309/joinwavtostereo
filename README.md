@@ -372,7 +372,6 @@ echo "
 
 ## extensions_iperfex.comf
 ```bash
-cat /etc/asterisk/extensions_iperfex.comf
 [sub-record-check]
 include => sub-record-check-custom
 exten => s,1,NoOp(---- IPERFEX ----)
@@ -437,8 +436,8 @@ exten => record,n,MixMonitor(${MIXMON_DIR}${YEAR}/${MONTH}/${DAY}/${CALLFILENAME
 exten => record,n,Monitor(wav,${MIXMON_DIR}${YEAR}/${MONTH}/${DAY}/${CALLFILENAME}-A,b)
 exten => record,n,Set(__CHANNEL_IN=${MIXMON_DIR}${YEAR}/${MONTH}/${DAY}/${CALLFILENAME}-A-in.wav)
 exten => record,n,Set(__CHANNEL_OUT=${MIXMON_DIR}${YEAR}/${MONTH}/${DAY}/${CALLFILENAME}-A-out.wav)
-exten => record,n,Set(__CHANNEL_NAME_FINAL=${CALLFILENAME}-A-STEREO.wav)
-exten => record,n,Set(CHANNEL(hangup_handler_push)=hangup-iperfex,h,1)
+exten => record,n,Set(__CHANNEL_NAME_FINAL=${YEAR}/${MONTH}/${DAY}/${CALLFILENAME}-A-STEREO.wav)
+exten => record,n,Set(CHANNEL(hangup_handler_push)=hangup-iperfex-issabel,h,1)
 
 exten => record,n,Set(__REC_STATUS=RECORDING)
 exten => record,n,Set(CDR(recordingfile)=${CALLFILENAME}.${MON_FMT})
@@ -463,12 +462,21 @@ exten => recconf,n,Return()
 ;--== end of [sub-record-check] ==--;
 
 
-[hangup-iperfex]
+[hangup-iperfex-issabel]
 exten => h,1,NoOp(---- IPERFEX -----)
  same => n,StopMonitor()
  same => n,NoOP(UNIQUEID: startCALL: ${CDR(start)} endCALL: ${CDR(end)} durationCALL: ${CDR(duration)})
  same => n,NoOp(CHANNEL_OUT CLIENTE: /var/spool/asterisk/monitor/${CHANNEL_OUT})
  same => n,NoOp(CHANNEL_INT AGENTE: /var/spool/asterisk/monitor/${CHANNEL_IN})
- same => n,AGI(iperfex2.agi,/var/spool/asterisk/monitor/${CHANNEL_OUT},/var/spool/asterisk/monitor/${CHANNEL_IN},/var/spool/asterisk/monitor/${CHANNEL_NAME_FINAL})
+ same => n,AGI(iperfex-issabel-local.agi,/var/spool/asterisk/monitor/${CHANNEL_OUT},/var/spool/asterisk/monitor/${CHANNEL_IN},/var/spool/asterisk/monitor/${CHANNEL_NAME_FINAL})
+ same => n,Return()
+
+[hangup-iperfex-debian-go]
+exten => h,1,NoOp(---- IPERFEX -----)
+ same => n,StopMonitor()
+ same => n,NoOP(UNIQUEID: startCALL: ${CDR(start)} endCALL: ${CDR(end)} durationCALL: ${CDR(duration)})
+ same => n,NoOp(CHANNEL_OUT CLIENTE: /var/spool/asterisk/monitor/${CHANNEL_OUT})
+ same => n,NoOp(CHANNEL_INT AGENTE: /var/spool/asterisk/monitor/${CHANNEL_IN})
+ same => n,AGI(iperfex-debian-go.agi,/var/spool/asterisk/monitor/${CHANNEL_OUT},/var/spool/asterisk/monitor/${CHANNEL_IN},${CHANNEL_NAME_FINAL})
  same => n,Return()
 ```
