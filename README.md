@@ -436,8 +436,9 @@ exten => record,n,MixMonitor(${MIXMON_DIR}${YEAR}/${MONTH}/${DAY}/${CALLFILENAME
 exten => record,n,Monitor(wav,${MIXMON_DIR}${YEAR}/${MONTH}/${DAY}/${CALLFILENAME}-A,b)
 exten => record,n,Set(__CHANNEL_IN=${MIXMON_DIR}${YEAR}/${MONTH}/${DAY}/${CALLFILENAME}-A-in.wav)
 exten => record,n,Set(__CHANNEL_OUT=${MIXMON_DIR}${YEAR}/${MONTH}/${DAY}/${CALLFILENAME}-A-out.wav)
-exten => record,n,Set(__CHANNEL_NAME_FINAL=${YEAR}/${MONTH}/${DAY}/${CALLFILENAME}-A-STEREO.wav)
-exten => record,n,Set(CHANNEL(hangup_handler_push)=hangup-iperfex-issabel,h,1)
+exten => record,n,Set(__CHANNEL_NAME_FINAL=${CALLFILENAME}-A-STEREO.wav)
+exten => record,n,Set(CHANNEL(hangup_handler_push)=iperfex-issabel-local.agi,h,1) ; local
+;exten => record,n,Set(CHANNEL(hangup_handler_push)=iperfex-debian-go.agi,h,1) ; debian
 
 exten => record,n,Set(__REC_STATUS=RECORDING)
 exten => record,n,Set(CDR(recordingfile)=${CALLFILENAME}.${MON_FMT})
